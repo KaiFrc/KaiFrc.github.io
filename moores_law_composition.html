@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>After Moore — A Multimodal Inquiry</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --border: #1e1e1e;
+    --gold: #c9a84c;
+    --gold-dim: #8a6f2e;
+    --amber: #f0a500;
+    --text: #e2ddd6;
+    --text-dim: #7a736b;
+    --text-mid: #b0a898;
+    --red-accent: #c0392b;
+    --green-accent: #27ae60;
+    --blue-accent: #2980b9;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.75;
+    font-size: 17px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    overflow: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 60px 60px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .circuit-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    background-image:
+      repeating-linear-gradient(0deg, var(--gold) 0px, transparent 1px, transparent 60px),
+      repeating-linear-gradient(90deg, var(--gold) 0px, transparent 1px, transparent 60px);
+    background-size: 60px 60px;
+  }
+
+  .header-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 36px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(52px, 8vw, 110px);
+    line-height: 0.95;
+    max-width: 900px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.9s 0.1s ease both;
+  }
+
+  header h1 em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  .header-question {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(18px, 2.5vw, 26px);
+    font-style: italic;
+    color: var(--text-mid);
+    max-width: 700px;
+    margin-bottom: 48px;
+    line-height: 1.5;
+    animation: fadeUp 1s 0.2s ease both;
+  }
+
+  .header-meta {
+    display: flex;
+    gap: 40px;
+    animation: fadeUp 1s 0.3s ease both;
+  }
+
+  .meta-item {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  .meta-item span {
+    display: block;
+    color: var(--text-mid);
+    margin-top: 4px;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 36px;
+    left: 60px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: fadeUp 1s 0.5s ease both;
+  }
+
+  .scroll-hint::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--gold-dim);
+  }
+
+  /* ── LAYOUT ── */
+  .page-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 60px;
+  }
+
+  nav ul {
+    display: flex;
+    gap: 0;
+    list-style: none;
+    overflow-x: auto;
+  }
+
+  nav a {
+    display: block;
+    padding: 18px 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+  }
+
+  nav a:hover {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 100px 0 60px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    max-width: 200px;
+  }
+
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.1;
+    margin-bottom: 32px;
+    max-width: 800px;
+  }
+
+  h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  p {
+    max-width: 700px;
+    margin-bottom: 20px;
+    color: var(--text-mid);
+  }
+
+  p strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* ── PULL QUOTES ── */
+  blockquote {
+    border-left: 3px solid var(--gold);
+    padding: 20px 0 20px 32px;
+    margin: 40px 0;
+    max-width: 640px;
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    line-height: 1.45;
+    font-style: italic;
+    color: var(--text);
+  }
+
+  blockquote cite {
+    display: block;
+    margin-top: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-style: normal;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── TWO-COL ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .two-col p { max-width: 100%; }
+
+  @media (max-width: 800px) {
+    .two-col { grid-template-columns: 1fr; gap: 32px; }
+    .page-wrap { padding: 0 24px; }
+    nav { padding: 0 24px; }
+    header { padding: 60px 24px 40px; }
+  }
+
+  /* ── GRAPH ── */
+  .graph-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 40px;
+    margin: 48px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .graph-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  #mooreChart { width: 100%; height: 340px; }
+
+  .graph-legend {
+    display: flex;
+    gap: 28px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  /* ── STAT CARDS ── */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin: 48px 0;
+    border: 1px solid var(--border);
+  }
+
+  @media (max-width: 700px) { .stat-row { grid-template-columns: 1fr; } }
+
+  .stat-card {
+    background: var(--surface);
+    padding: 36px 28px;
+    border-right: 1px solid var(--border);
+  }
+
+  .stat-card:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 52px;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1.5;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+    margin: 48px 0;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--gold), var(--border));
+  }
+
+  .tl-item {
+    position: relative;
+    margin-bottom: 40px;
+  }
+
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -36px;
+    top: 6px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid var(--bg);
+  }
+
+  .tl-year {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    margin-bottom: 6px;
+  }
+
+  .tl-title {
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .tl-desc {
+    font-size: 15px;
+    color: var(--text-dim);
+    max-width: 560px;
+    margin: 0;
+  }
+
+  /* ── TECH CARDS ── */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    margin: 40px 0;
+    border: 1px solid var(--border);
+  }
+
+  @media (max-width: 700px) { .tech-grid { grid-template-columns: 1fr; } }
+
+  .tech-card {
+    background: var(--surface);
+    padding: 32px 28px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+  }
+
+  .tech-card:hover { background: #161616; }
+
+  .tech-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .tech-card h3 { font-size: 20px; margin-bottom: 10px; }
+  .tech-card p { font-size: 15px; }
+
+  /* ── SOURCE BOX ── */
+  .source-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    padding: 20px 24px;
+    margin: 12px 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  .source-box strong {
+    color: var(--text-mid);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* ── CONCLUSION ── */
+  .conclusion-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  @media (max-width: 800px) { .conclusion-grid { grid-template-columns: 1fr; } }
+
+  .verdict {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 32px;
+  }
+
+  .verdict-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .verdict h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  .verdict p { font-size: 14px; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 60px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    border-top: 1px solid var(--border);
+    line-height: 1.8;
+  }
+
+  footer h4 {
+    color: var(--text-mid);
+    margin-bottom: 16px;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  footer p { max-width: 100%; font-size: 11px; color: var(--text-dim); margin-bottom: 8px; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── INLINE CODE ── */
+  code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    color: var(--gold);
+  }
+
+  /* ── MODE TAGS ── */
+  .mode-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 32px 0;
+  }
+
+  .mode-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+
+  .mode-tag.active {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(201,168,76,0.06);
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════ -->
+<header>
+  <div class="circuit-bg"></div>
+  <p class="header-label">Project 4 — Multimodal Composition · Rutgers University</p>
+  <h1>After <em>Moore</em></h1>
+  <p class="header-question">"Is Moore's Law dead — and if so, what happens to every piece of technology built on top of it?"</p>
+  <div class="header-meta">
+    <div class="meta-item">MODES USED<span>Linguistic · Visual · Spatial</span></div>
+    <div class="meta-item">WORD COUNT<span>~1,400 words</span></div>
+    <div class="meta-item">SOURCES<span>5 cited</span></div>
+  </div>
+  <p class="scroll-hint">scroll to explore</p>
+</header>
+
+<!-- ═══════════════════════════════════════════
+     STICKY NAV
+════════════════════════════════════════════ -->
+<nav>
+  <ul>
+    <li><a href="#background">Background</a></li>
+    <li><a href="#physical">Physical Limits</a></li>
+    <li><a href="#economic">Economic Reality</a></li>
+    <li><a href="#beyond">Beyond Silicon</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+    <li><a href="#sources">Works Cited</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     BACKGROUND
+════════════════════════════════════════════ -->
+<section id="background">
+  <div class="page-wrap">
+    <p class="section-label">01 — Background</p>
+    <h2>A Prediction That Became a Promise</h2>
+
+    <div class="two-col">
+      <div>
+        <p>In 1965, Gordon Moore — then director of R&D at Fairchild Semiconductor — published a short paper in <em>Electronics</em> magazine that contained an observation that would define the next six decades of human civilization. He noticed that the number of components on an integrated circuit had been doubling roughly every year, and predicted this trend would continue. By 1975, he revised the doubling period to approximately every two years.</p>
+
+        <p>That observation became <strong>Moore's Law</strong>: a self-fulfilling prophecy that the semiconductor industry adopted as both a roadmap and a target. Companies like Intel, TSMC, and Samsung competed to outpace each other — and in doing so, collectively delivered on the prediction year after year, decade after decade.</p>
+
+        <p>The consequences of this compounding are almost incomprehensible. The Apollo Guidance Computer that landed humans on the moon in 1969 had approximately 4,000 transistors. Today's Apple M4 chip contains <strong>28 billion transistors</strong> on a piece of silicon smaller than a postage stamp. Your smartphone is not slightly more powerful than the machines that ran NASA's space program — it is millions of times more powerful, at a fraction of the cost and energy.</p>
+      </div>
+      <div>
+        <blockquote>
+          "The complexity for minimum component costs has increased at a rate of roughly a factor of two per year."
+          <cite>— Gordon Moore, Electronics Magazine, 1965</cite>
+        </blockquote>
+
+        <div class="stat-row" style="margin-top:32px; grid-template-columns:1fr;">
+          <div class="stat-card">
+            <div class="stat-num">2×</div>
+            <div class="stat-label">transistors per chip<br/>every ~2 years (original projection)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRAPH -->
+    <div class="graph-wrap reveal">
+      <p class="graph-title">// Transistor Count by Year — Log Scale</p>
+      <canvas id="mooreChart"></canvas>
+      <div class="graph-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#c9a84c"></div>Intel / AMD / Apple (consumer)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2980b9"></div>Moore's Law trend (2× / 2yr)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#c0392b"></div>Slowdown zone</div>
+      </div>
+    </div>
+
+    <p>For most of the 20th century, the mechanism behind this doubling was straightforward: <strong>miniaturization</strong>. Make each transistor smaller, and you can fit more on the same chip without increasing its size or cost. The dominant device was the MOSFET — Metal-Oxide-Semiconductor Field-Effect Transistor — and each new "process node" simply made these devices smaller, faster, and more energy-efficient.</p>
+
+    <p>But around 2005, something began to change. Clock speeds — the frequency at which processors operate — stopped increasing. Power density hit a thermal ceiling. Transistors were now so small that quantum mechanical effects began to interfere with their function. The industry was approaching the physical edge of what silicon could do.</p>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PHYSICAL LIMITS
+════════════════════════════════════════════ -->
+<section id="physical">
+  <div class="page-wrap">
+    <p class="section-label">02 — The Wall</p>
+    <h2>When Physics Says No</h2>
+
+    <div class="two-col reveal">
+      <div>
+        <p>The MOSFET operates by using a gate voltage to control the flow of current through a channel between a source and drain. A thin oxide layer — the gate dielectric — insulates the gate from the channel. As transistors shrank, this oxide layer had to shrink too, maintaining the electrostatic control that makes the device function.</p>
+
+        <p>By the mid-2000s, gate oxide layers had reached just a few nanometers thick — only about <strong>10–15 atomic layers</strong> of material. At this scale, a quantum mechanical phenomenon called <strong>gate oxide tunneling</strong> becomes dominant. Electrons no longer wait for the transistor to "switch on" — they simply tunnel through the barrier, creating leakage current even when the device is supposed to be off. The result: <strong>wasted power, excess heat, and unreliable switching</strong>.</p>
+
+        <p>This is the thermal wall. As transistors shrank but power density increased, chips began dissipating enormous amounts of heat per unit area. A modern high-performance CPU can dissipate over 100 watts per square centimeter — comparable to a nuclear reactor's heat output per unit area. Cooling, not computation, became the dominant engineering constraint.</p>
+      </div>
+      <div>
+        <h3>The Limits, Quantified</h3>
+
+        <div class="stat-row" style="grid-template-columns:1fr; border:none; gap:2px; margin-top:0;">
+          <div class="stat-card">
+            <div class="stat-num" style="font-size:36px;">~3nm</div>
+            <div class="stat-label">current leading-edge process node (TSMC N3)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" style="font-size:36px;">0.25nm</div>
+            <div class="stat-label">diameter of a single silicon atom</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" style="font-size:36px;">~12</div>
+            <div class="stat-label">atoms wide — the current gate oxide thickness</div>
+          </div>
+        </div>
+
+        <p style="margin-top:20px; font-size:14px;">At these scales, statistical variation — even a single misplaced atom — can cause a transistor to fail. Manufacturing yield becomes a probabilistic challenge, not just an engineering one.</p>
+      </div>
+    </div>
+
+    <blockquote class="reveal">
+      "We are approaching the end of the Dennard scaling era. Voltage can no longer shrink in proportion to transistor dimensions without causing unacceptable leakage."
+      <cite>— Waldrop, M.M. (2016). "The chips are down for Moore's Law." Nature, 530, 144–147.</cite>
+    </blockquote>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     ECONOMIC
+════════════════════════════════════════════ -->
+<section id="economic">
+  <div class="page-wrap">
+    <p class="section-label">03 — The Cost Problem</p>
+    <h2>Moore's Law Was Also an Economic Claim</h2>
+
+    <p>Gordon Moore's observation was never purely physical — the full version of his argument was that the <em>cost per transistor</em> would decrease exponentially as density increased. More transistors for less money, every two years. This economic dimension is where the law has arguably already collapsed.</p>
+
+    <div class="timeline reveal">
+      <div class="tl-item">
+        <p class="tl-year">1970s – 1990s</p>
+        <p class="tl-title">The Golden Era</p>
+        <p class="tl-desc">Each new node reliably delivered more transistors at lower cost per transistor. The economics of semiconductors followed Moore's prediction almost exactly.</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year">Early 2000s</p>
+        <p class="tl-title">The Clock Speed Wall</p>
+        <p class="tl-desc">CPU frequencies plateaued around 3–4 GHz. The industry pivoted to multi-core designs — adding more processors rather than making each one faster.</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year">2015 – Present</p>
+        <p class="tl-title">The Cost Inversion</p>
+        <p class="tl-desc">A leading-edge semiconductor fab now costs $20 billion or more to build. EUV lithography equipment from ASML runs over $150 million per machine. The cost per transistor has stopped falling and in some cases has risen.</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year">2024 – </p>
+        <p class="tl-title">Only Three Companies Can Keep Up</p>
+        <p class="tl-desc">As of 2024, only TSMC, Samsung, and Intel are capable of manufacturing at the leading edge. The economics of advanced semiconductor manufacturing have become so extreme that most of the world relies on a single company — TSMC — for the chips that power AI, smartphones, and defense systems.</p>
+      </div>
+    </div>
+
+    <p>The geopolitical implications of this concentration are staggering. The CHIPS and Science Act, signed in 2022, committed $52 billion in U.S. federal funding specifically to rebuild domestic semiconductor manufacturing capacity — an acknowledgment that Moore's Law had created a global strategic vulnerability as much as a technological triumph.</p>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     BEYOND SILICON
+════════════════════════════════════════════ -->
+<section id="beyond">
+  <div class="page-wrap">
+    <p class="section-label">04 — What Comes Next</p>
+    <h2>The Industry's Four Bets on the Future</h2>
+
+    <p>The semiconductor industry does not wait for problems to become fatal before pivoting. Even as Moore's Law slows, multiple alternative approaches are being aggressively developed — each representing a fundamentally different philosophy about how to continue improving computational performance.</p>
+
+    <div class="tech-grid reveal">
+      <div class="tech-card">
+        <p class="tech-tag">Approach 01</p>
+        <h3>3D Stacking & Chiplets</h3>
+        <p>Rather than making transistors smaller, engineers are now stacking multiple dies vertically — building upward like a skyscraper rather than shrinking the floor plan. Intel's Foveros packaging and TSMC's SoIC technology allow chips from different manufacturers to be combined into a single package. AMD's Ryzen processors use chiplets — modular tiles of silicon — to achieve effective transistor counts that would be impossible in a single monolithic die.</p>
+      </div>
+      <div class="tech-card">
+        <p class="tech-tag">Approach 02</p>
+        <h3>New Materials: GaN and SiC</h3>
+        <p>Wide-bandgap semiconductors like Gallium Nitride (GaN) and Silicon Carbide (SiC) can operate at higher voltages, higher temperatures, and higher frequencies than silicon — making them ideal for power electronics, radio frequency applications, and electric vehicle inverters. These materials do not follow Silicon's roadmap; they open entirely new design spaces that silicon cannot enter.</p>
+      </div>
+      <div class="tech-card">
+        <p class="tech-tag">Approach 03</p>
+        <h3>Neuromorphic Computing</h3>
+        <p>Traditional CPUs process data sequentially in a von Neumann architecture. Neuromorphic chips — like Intel's Loihi 2 — attempt to replicate the structure of biological neural networks, with computation and memory collocated in a massively parallel, event-driven architecture. For certain workloads like AI inference and sensor processing, neuromorphic chips achieve orders of magnitude greater energy efficiency than conventional silicon.</p>
+      </div>
+      <div class="tech-card">
+        <p class="tech-tag">Approach 04</p>
+        <h3>Quantum Computing</h3>
+        <p>Quantum computers exploit superposition and entanglement to perform certain calculations exponentially faster than classical computers. IBM's 2023 quantum roadmap projects systems exceeding 100,000 qubits within years. However, quantum error correction remains a massive unsolved problem — current systems require hundreds of physical qubits to represent a single reliable logical qubit. Quantum computing is real, but practical, fault-tolerant quantum advantage for general computation remains a research-stage pursuit.</p>
+      </div>
+    </div>
+
+    <p>None of these approaches are direct replacements for Moore's Law's elegant simplicity. They are diverse, specialized, and often complementary. The future of computing is not a single successor technology — it is a portfolio of solutions, each optimized for different workloads, power envelopes, and cost structures.</p>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     CONCLUSION
+════════════════════════════════════════════ -->
+<section id="conclusion">
+  <div class="page-wrap">
+    <p class="section-label">05 — Conclusion</p>
+    <h2>The Law Is Dead. The Progress Isn't.</h2>
+
+    <div class="conclusion-grid reveal">
+      <div>
+        <p>The answer to the central question — <em>Is Moore's Law dead?</em> — depends entirely on which version of the law you are asking about. As a physical claim that transistor density will double every two years at constant cost, Moore's Law has effectively ended. The curve has bent. The economics have inverted. The physics has been exhausted.</p>
+
+        <p>But as a broader cultural and industrial commitment to <strong>continuous improvement in computational capability</strong>, the spirit of Moore's Law persists — just through radically different mechanisms. The doubling is no longer guaranteed by shrinking transistors. It must be earned through heterogeneous integration, new materials, new architectures, and new paradigms.</p>
+
+        <p>This has profound implications beyond engineering. The assumption of automatic, predictable improvement in computing has been baked into decades of economic planning, scientific research timelines, and strategic policy. A world where computing performance no longer doubles for free forces difficult prioritization decisions: which problems are worth the escalating cost of leading-edge silicon? Who gets access to the most advanced chips? How do democracies respond to a supply chain that runs through Taiwan?</p>
+
+        <p>These are not questions with clean answers. They are questions that will define the next generation of technological, economic, and geopolitical development. Understanding Moore's Law — its mechanics, its limits, and its legacy — is not optional knowledge for engineers. It is foundational context for anyone who wants to understand the world that computation has built, and the harder world that comes next.</p>
+      </div>
+
+      <div>
+        <div class="verdict">
+          <p class="verdict-label">// Key Takeaways</p>
+          <h3>Is Moore's Law Dead?</h3>
+          <p style="color:var(--gold); font-weight:500; margin-bottom:16px;">Physically: Yes. Economically: Yes.<br/>As aspiration: No.</p>
+          <p>The semiconductor industry is transitioning from a single exponential curve to a complex ecosystem of parallel improvement strategies — each more domain-specific and expensive than Moore's original vision.</p>
+        </div>
+
+        <div class="verdict" style="margin-top:2px;">
+          <p class="verdict-label">// Future Research Directions</p>
+          <h3>Open Questions</h3>
+          <p>Can quantum error correction reach the threshold needed for practical advantage? Will GaN and SiC displace silicon in high-performance applications? How will geopolitics reshape the global semiconductor supply chain over the next decade?</p>
+        </div>
+
+        <div class="verdict" style="margin-top:2px;">
+          <p class="verdict-label">// Communication Modes Used</p>
+          <div class="mode-tags" style="margin:12px 0 0;">
+            <span class="mode-tag active">Linguistic</span>
+            <span class="mode-tag active">Visual</span>
+            <span class="mode-tag active">Spatial</span>
+            <span class="mode-tag">Audio</span>
+            <span class="mode-tag">Gestural</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     WORKS CITED
+════════════════════════════════════════════ -->
+<section id="sources" style="border-bottom:none;">
+  <div class="page-wrap">
+    <p class="section-label">Works Cited</p>
+    <h2>Sources</h2>
+
+    <div class="source-box">
+      <strong>Expert Source 1</strong>
+      Moore, Gordon E. "Cramming More Components onto Integrated Circuits." <em>Electronics</em>, vol. 38, no. 8, 19 Apr. 1965, pp. 114–117. Reprinted by IEEE, 2006.
+    </div>
+
+    <div class="source-box">
+      <strong>Expert Source 2</strong>
+      Waldrop, M. Mitchell. "The Chips Are Down for Moore's Law." <em>Nature</em>, vol. 530, no. 7589, 9 Feb. 2016, pp. 144–147. doi:10.1038/530144a.
+    </div>
+
+    <div class="source-box">
+      <strong>Expert Source 3</strong>
+      Theis, Thomas N., and H.-S. Philip Wong. "The End of Moore's Law: A New Beginning for Information Technology." <em>Computing in Science & Engineering</em>, vol. 19, no. 2, Mar./Apr. 2017, pp. 41–50. IEEE. doi:10.1109/MCSE.2017.29.
+    </div>
+
+    <div class="source-box">
+      <strong>Additional Source 4</strong>
+      "CHIPS and Science Act." U.S. Congress, 117th Congress, H.R. 4346, signed into law 9 Aug. 2022. Congress.gov, https://www.congress.gov/bill/117th-congress/house-bill/4346.
+    </div>
+
+    <div class="source-box">
+      <strong>Additional Source 5</strong>
+      TSMC. "TSMC 3nm Technology." TSMC Technology Overview, 2023, https://www.tsmc.com/english/dedicatedFoundry/technology/logic/l_3nm.
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer>
+  <div class="page-wrap">
+    <h4>Project Metadata</h4>
+    <p>Course: English Composition · Project 4: Multimodal Composition</p>
+    <p>Institution: Rutgers University – New Brunswick</p>
+    <p>Modes of Communication: Linguistic (written text, headings, citations), Visual (data visualization, color, typographic hierarchy), Spatial (layout, navigation, grid structure, negative space)</p>
+    <p style="margin-top:20px; color:#3a3530;">Built as an HTML multimodal composition — viewable in any browser.</p>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     CHART.JS + GRAPH SCRIPT
+════════════════════════════════════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// ── Transistor count data (approximate, historical) ──
+const years = [1971,1974,1978,1982,1985,1989,1993,1997,1999,2003,2006,2008,2010,2012,2014,2016,2019,2021,2023];
+const counts = [2300, 6000, 29000, 120000, 275000, 1200000, 3100000, 7500000, 24000000, 105000000, 291000000, 820000000, 2600000000, 3100000000, 5500000000, 7200000000, 23800000000, 57000000000, 92000000000];
+
+// Moore trend line from 1971
+const mooreTrend = years.map((y, i) => {
+  // 2× every 2 years from 1971 baseline of 2300
+  return Math.round(2300 * Math.pow(2, (y - 1971) / 2));
+});
+
+const ctx = document.getElementById('mooreChart').getContext('2d');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: years,
+    datasets: [
+      {
+        label: 'Actual Transistor Count',
+        data: counts,
+        borderColor: '#c9a84c',
+        backgroundColor: 'rgba(201,168,76,0.08)',
+        pointBackgroundColor: '#c9a84c',
+        pointRadius: 4,
+        borderWidth: 2,
+        tension: 0.3,
+        fill: true,
+      },
+      {
+        label: "Moore's Law Trend",
+        data: mooreTrend,
+        borderColor: '#2980b9',
+        borderWidth: 1.5,
+        borderDash: [6, 4],
+        pointRadius: 0,
+        fill: false,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        type: 'logarithmic',
+        grid: { color: '#1e1e1e' },
+        ticks: {
+          color: '#7a736b',
+          font: { family: 'IBM Plex Mono', size: 10 },
+          callback: val => {
+            if (val >= 1e9) return (val/1e9).toFixed(0) + 'B';
+            if (val >= 1e6) return (val/1e6).toFixed(0) + 'M';
+            if (val >= 1e3) return (val/1e3).toFixed(0) + 'K';
+            return val;
+          }
+        }
+      },
+      x: {
+        grid: { color: '#1e1e1e' },
+        ticks: {
+          color: '#7a736b',
+          font: { family: 'IBM Plex Mono', size: 10 }
+        }
+      }
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#111',
+        borderColor: '#1e1e1e',
+        borderWidth: 1,
+        titleFont: { family: 'IBM Plex Mono', size: 11 },
+        bodyFont: { family: 'IBM Plex Mono', size: 11 },
+        titleColor: '#c9a84c',
+        bodyColor: '#b0a898',
+        callbacks: {
+          label: ctx => {
+            const v = ctx.parsed.y;
+            if (v >= 1e9) return (v/1e9).toFixed(1) + ' billion transistors';
+            if (v >= 1e6) return (v/1e6).toFixed(1) + ' million transistors';
+            return v.toLocaleString() + ' transistors';
+          }
+        }
+      }
+    }
+  }
+});
+
+// ── Scroll reveal ──
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(r => observer.observe(r));
+</script>
+</body>
+</html>
